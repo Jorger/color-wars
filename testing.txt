@@ -1,0 +1,88 @@
+
+// const center = {
+//   x: Math.round((SIZE_CELL - SIZE_CIRCLE) / 2),
+//   y: Math.round((SIZE_CELL - SIZE_CIRCLE) / 2),
+// };
+
+// const TOP = {
+//   x: Math.round((SIZE_CELL - SIZE_CIRCLE + 1) / 2),
+//   y: (SIZE_CELL - GAP_GRID) * -1,
+// };
+
+// const LEFT = {
+//   x: (SIZE_CELL - GAP_GRID + 1) * -1,
+//   y: Math.round((SIZE_CELL - SIZE_CIRCLE) / 2),
+// };
+
+// const RIGHT = {
+//   x: Math.round(SIZE_CELL - SIZE_CIRCLE - (SIZE_CELL - GAP_GRID + 2) * -1),
+//   y: Math.round((SIZE_CELL - SIZE_CIRCLE) / 2),
+// };
+
+// const BOTTOM = {
+//   x: Math.round((SIZE_CELL - SIZE_CIRCLE + 1) / 2),
+//   y: Math.round(SIZE_CELL - SIZE_CIRCLE - (SIZE_CELL - GAP_GRID + 2) * -1),
+// };
+
+// const center = CIRCLE_POSITION.CENTER;
+
+// const TOP = CIRCLE_POSITION.TOP;
+
+// const LEFT = CIRCLE_POSITION.LEFT;
+
+// const RIGHT = CIRCLE_POSITION.RIGHT;
+
+// const BOTTOM = CIRCLE_POSITION.BOTTOM;
+// Sólo un dot
+// const tmpDotCenter = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2),
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2),
+// };
+
+// Cuando hay dos
+// const dot1 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2),
+// };
+
+// const dot2 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2),
+// };
+
+// Cuando hay tres
+// const dot1 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+// };
+
+// const dot2 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+// };
+
+// const dot3 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2),
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
+// };
+
+// Cuando hay 4
+// const dot1 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+// };
+
+// const dot2 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+// };
+
+// const dot3 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) + SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
+// };
+
+// const dot4 = {
+//   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
+//   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
+// };

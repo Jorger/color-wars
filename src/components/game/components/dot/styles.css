@@ -1,0 +1,14 @@
+.game-dot {
+  background-color: white;
+  border-radius: 50%;
+  height: var(--size-dot);
+  left: 25%;
+  opacity: 1;
+  position: absolute;
+  transition: left var(--dot-time) ease-in-out, top var(--dot-time) ease-in-out;
+  width: var(--size-dot);
+}
+
+.game-dot.game-dot-hide {
+  opacity: 0;
+}
