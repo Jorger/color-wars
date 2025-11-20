@@ -1,0 +1,38 @@
+.game-circle {
+  --x1: 0px;
+  --y1: 0px;
+  --x2: 0px;
+  --y2: 0px;
+}
+
+.game-circle {
+  background-color: rgba(12, 12, 12, 0.407);
+  border-radius: 50%;
+  height: var(--size-circle);
+  pointer-events: none;
+  position: absolute;
+  width: var(--size-circle);
+}
+
+.game-circle.game-circle-animate {
+  animation: animate-circle var(--circle-time) ease-in-out forwards;
+}
+
+.game-circle.red {
+  background-color: #fd695d;
+}
+
+.game-circle.blue {
+  background-color: #00caf0;
+}
+
+@keyframes animate-circle {
+  0% {
+    left: var(--x1);
+    top: var(--y1);
+  }
+  100% {
+    left: var(--x2);
+    top: var(--y2);
+  }
+}

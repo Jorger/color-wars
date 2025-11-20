@@ -1,3 +1,8 @@
+import Cell from "./cell";
+import Circle from "./circle";
+import Dot from "./dot";
+import Dots from "./dots";
 import GameWrapper from "./gameWrapper";
+import Grid from "./grid";
 
-export { GameWrapper };
+export { Cell, Circle, Dot, Dots, GameWrapper, Grid };

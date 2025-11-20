@@ -1,0 +1,10 @@
+.game-grid {
+  display: grid;
+  gap: var(--gap-grid);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  height: var(--size-grid);
+  width: var(--size-grid);
+  /* TODO: remover */
+  /* outline: 1px solid red; */
+}
