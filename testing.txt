@@ -86,3 +86,60 @@
 //   x: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
 //   y: Math.round((SIZE_CELL - SIZE_DOT) / 2) - SIZE_CELL * 0.13,
 // };
+
+
+Incio de pruebas
+
+<Cell
+          isDisabled={false}
+          cellPosition={{ row: 0, col: 0 }}
+          totalDots={4}
+          isAnimate={testAnimate}
+          colorCircleBase="RED"
+          onClick={(cellPosition) => {
+            console.log(cellPosition);
+          }}
+        />
+        <Cell
+          isDisabled={false}
+          cellPosition={{ row: 0, col: 1 }}
+          totalDots={2}
+          isAnimate={testAnimate}
+          colorCircleBase="BLUE"
+          circleOutsite={{
+            colorCircleOutside: "RED",
+            pathCircleOutside: [ECirclePosition.LEFT, ECirclePosition.CENTER],
+          }}
+          onClick={(cellPosition) => {
+            console.log(cellPosition);
+          }}
+        />
+        {/* isAnimate={testAnimate} */}
+        <Cell
+          isAnimate={false}
+          isDisabled={false}
+          cellPosition={{ row: 0, col: 2 }}
+          totalDots={2}
+          colorCircleBase="RED"
+          // circleOutsite={{
+          //   colorCircleOutside: "BLUE",
+          //   pathCircleOutside: [ECirclePosition.LEFT, ECirclePosition.CENTER],
+          // }}
+          onClick={(cellPosition) => {
+            console.log(cellPosition);
+          }}
+        />
+
+Fin de pruebas
+
+  {/* <Cell
+          isDisabled={false}
+          cellPosition={{ row: 0, col: 0 }}
+          circleColor="RED"
+          totalDots={4}
+          isAnimate={testAnimate}
+          path={[ECirclePosition.LEFT, ECirclePosition.CENTER]}
+          onClick={(cellPosition) => {
+            console.log(cellPosition);
+          }}
+        /> */}
