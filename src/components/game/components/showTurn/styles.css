@@ -1,0 +1,56 @@
+.game-turn {
+  --turn-red: #e68c68;
+  --turn-blue: #5da2ca;
+  position: absolute;
+  bottom: -16%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.game-turn-label {
+  border-radius: 50%;
+  border: 10px solid white;
+  color: white;
+  display: flex;
+  font-size: 40px;
+  font-weight: bold;
+  height: 250px;
+  justify-content: center;
+  padding-top: 14%;
+  width: 250px;
+  box-shadow:
+    rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  animation: scaleAndFade 1s ease-in-out forwards;
+}
+
+.game-turn-label.blue {
+  background-color: var(--turn-blue);
+}
+
+.game-turn-label.red {
+  background-color: var(--turn-red);
+}
+
+@keyframes scaleAndFade {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  30% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

@@ -24,8 +24,14 @@ const Circle = ({
   isAnimate = false,
   color = EBoardColor.RED,
 }: CircleProps) => {
+  /**
+   * Se obtiene el path de animación...
+   */
   const [from, to] = [CIRCLE_POSITION[path[0]], CIRCLE_POSITION[path[1]]];
 
+  /**
+   * Se establecen las variables css para animar el círculo...
+   */
   const style = {
     "--x1": `${from.x}px`,
     "--y1": `${from.y}px`,
@@ -35,6 +41,9 @@ const Circle = ({
 
   const className = `${CLASS_NAMES.CIRCLE} ${color.toLowerCase()} ${isAnimate ? CLASS_NAMES.ANIMATE : ""}`;
 
+  /**
+   * Si no está animado, por defecto la posición del círculo es su posición inicial...
+   */
   if (!isAnimate) {
     style.left = `${from.x}px`;
     style.top = `${from.y}px`;

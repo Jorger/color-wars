@@ -1,13 +1,16 @@
-import { Cells, GameWrapper, Grid } from "./components";
-import {
-  getBaseDataCells,
-  getCurrentColor,
-  getPlayerByID,
-  validateEndDotAnimation,
-  validateSelectCell,
-} from "./helpers";
+import { cellPositionInRage } from "../../utils/indexInRange";
 import { PlayerId } from "rune-sdk";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useWait } from "../../hooks";
+import {
+  Cells,
+  GameWrapper,
+  Grid,
+  OpponentThinks,
+  Score,
+  ShowTurn,
+  StartCounter,
+} from "./components";
 import {
   CIRCLE_TIME_ANIMATION,
   DOT_TIME_ANIMATION,
@@ -15,19 +18,37 @@ import {
   INITIAL_UI_INTERACTIONS,
   UI_INTERACTIONS_STARTED,
 } from "../../utils/constants";
+import {
+  getBaseDataCells,
+  getCurrentColor,
+  getPlayerByID,
+  getRandomCell,
+  validateCircleEndAnimation,
+  validateDotEndAnimation,
+  validateSelectCell,
+} from "./helpers";
 import type {
   GameState,
   ICell,
   IMatrix,
   IUInteractions,
+  TBoardColor,
 } from "../../interfaces";
-import { useWait } from "../../hooks";
-
-// const testAnimate = false;
 
 const Game = () => {
+  /**
+   * Guarda el estado del juego que proviene del server...
+   */
   const [game, setGame] = useState<GameState>();
+
+  /**
+   * Guarda el ID del usuario en cada sesión...
+   */
   const [yourPlayerId, setYourPlayerId] = useState<PlayerId | undefined>();
+
+  /**
+   * Guarda la información de las celdas que se renderizan en el cliente...
+   */
   const [clientCells, setClientCells] = useState<ICell[][]>([]);
 
   /**
@@ -53,16 +74,44 @@ const Game = () => {
   const isGameOver = game?.isGameOver || false;
 
   /**
+   * Obtener el listado de jugadores...
+   */
+  const players = useMemo(() => game?.players || [], [game?.players]);
+
+  /**
+   * Obtiene la información del jugador actual en cada sesión...
+   */
+  const currentPlayer = getPlayerByID(yourPlayerId || "", players);
+
+  /**
    * Extraer la información que se require de la interacción del UI
    */
-  // showCounter, startTimer
-  const { disableUI, runDotAnimation, runCircleAnimation } = uiInteractions;
+  const {
+    disableUI,
+    startTimer,
+    showCounter,
+    runDotAnimation,
+    runCircleAnimation,
+  } = uiInteractions;
+
+  /**
+   * Si se muestra el mensaje del turno...
+   */
+  const showMessage = !showCounter && hasTurn;
 
   /**
    * Bloquea el UI, para prevenir cualquier acción por parte del usuario...
    */
   const isDisableUI = disableUI || !hasTurn || isGameOver;
 
+  /**
+   * Si se muestra el componente que indica que el oponenente está pensando...
+   */
+  const showOpponentThinks = !showCounter && !hasTurn && startTimer;
+
+  /**
+   * Efecto donde se configura Rune...
+   */
   useEffect(() => {
     Rune.initClient({
       onChange: ({ game, action, yourPlayerId, event }) => {
@@ -75,9 +124,6 @@ const Game = () => {
          * Se guarda el estado del juego que proviene del servicio...
          */
         setGame(game);
-
-        // console.log("ESTADO DEL GAME");
-        // console.log(game);
 
         /**
          * Indica que es el evento inicial cuando inicia el juego
@@ -95,81 +141,105 @@ const Game = () => {
         if (isNewGame) {
           setClientCells(getBaseDataCells(game.cells));
           setUiInteractions(INITIAL_UI_INTERACTIONS);
-          // console.log("ES UN NUEVO JUEGO, REINICIAR ESTADO...");
         }
 
         /**
-         * Actión que se ejecutó cuando se hizo click al martillo...
+         * Actión que indica que se ha seleccionado una celda...
          */
         if (action?.name === GAME_ACTION_NAME.OnSelectCell) {
-          // console.log("SELECCIONÓ UNA CELDA...");
-          // console.log({ yourPlayerId, cell: game.cellPosition });
-          setClientCells((current) => {
-            return validateSelectCell({
+          setClientCells((current) =>
+            validateSelectCell({
               cellPosition: game.cellPosition,
               clientCells: current,
               turnID: game.turnID,
               players: game.players,
-            });
-          });
+              setUiInteractions,
+            })
+          );
+        }
 
-          /**
-           * Se habilita la animación de los puntos, se garantiza
-           * que el UI siga bloqueado y que el tiempo del siguiente
-           * tueno no se ejecute...
-           */
-          setUiInteractions({
-            ...UI_INTERACTIONS_STARTED,
-            runDotAnimation: true,
-          });
+        if (action?.name === GAME_ACTION_NAME.OnNextTurn) {
+          if (!game.isGameOver) {
+            /**
+             * Se debe habilitar el UI para ese cliente, además de habilitar el tiempo
+             * del cronometro para el lanzamiento...
+             */
+            setUiInteractions({
+              ...UI_INTERACTIONS_STARTED,
+              disableUI: false,
+              startTimer: true,
+            });
+
+            // TODO: Tal vez sincronizar el valor de cells con el que llega del server...
+          } else {
+            /**
+             * Se establece que no debe exitir ninguna interacción...
+             */
+            setUiInteractions(UI_INTERACTIONS_STARTED);
+          }
         }
       },
     });
   }, []);
 
-  const handleCircleAnimation = useCallback(() => {
-    console.log("TERMINA LA ANIMACIÓN DEL CÍRCULO...");
-
-    setUiInteractions({
-      ...UI_INTERACTIONS_STARTED,
-      runDotAnimation: false,
-      runCircleAnimation: false,
-    });
-  }, []);
-
-  useWait(runCircleAnimation, CIRCLE_TIME_ANIMATION, handleCircleAnimation);
-
-  const handleDotAnimation = useCallback(() => {
-    console.log("TERMINA LA ANIMACIÓN DEL DOT!!");
-
-    setClientCells((current) => {
-      return validateEndDotAnimation({
+  /**
+   * Función que se ejecuta cuando se ha terminado la animación de
+   * movimiento de los círculos...
+   */
+  const handleCircleEndAnimation = useCallback(() => {
+    setClientCells((current) =>
+      validateCircleEndAnimation({
         clientCells: current,
         setUiInteractions,
-      });
+      })
+    );
+  }, []);
+
+  /**
+   * Hook que espera el tiempo de animación de movimiento de los círcuilos...
+   */
+  useWait(runCircleAnimation, CIRCLE_TIME_ANIMATION, handleCircleEndAnimation);
+
+  /**
+   * Función que se ejcuta cuado termina la animación de los dots/puntos...
+   */
+  const handleDotEndAnimation = useCallback(() => {
+    setClientCells((current) =>
+      validateDotEndAnimation({
+        clientCells: current,
+        hasTurn,
+        players,
+        setUiInteractions,
+      })
+    );
+  }, [hasTurn, players]);
+
+  /**
+   * Hook que espera el tiempo de animación de los dots
+   */
+  useWait(runDotAnimation, DOT_TIME_ANIMATION, handleDotEndAnimation);
+
+  /**
+   * Función que se ejcuta cuando el counter inicial ha terminado...
+   */
+  const handleEndStartCounter = useCallback(() => {
+    setUiInteractions({
+      ...UI_INTERACTIONS_STARTED,
+      disableUI: false,
+      startTimer: true,
     });
   }, []);
 
-  useWait(runDotAnimation, DOT_TIME_ANIMATION, handleDotAnimation);
-
-  if (!game || !yourPlayerId) {
-    // Rune only shows your game after an onChange() so no need for loading screen
-    return;
-  }
-
+  /**
+   * Función que se invoca cuando se ha seleccionado una celda...
+   * @param cellPosition
+   */
   const handleClickCell = (cellPosition: IMatrix) => {
-    if (hasTurn && !isGameOver) {
+    if (hasTurn && !isGameOver && cellPositionInRage(cellPosition)) {
       /**
        * Se debe bloquear al UI para el usuario que ha hecho click...
        */
       setUiInteractions(UI_INTERACTIONS_STARTED);
-      // setUiInteractions({
-      //   ...uiInteractions,
-      //   disableUI: true,
-      //   startTimer: false,
-      //   runDotAnimation: false,
-      //   runCircleAnimation: false,
-      // });
 
       /**
        * Se emite la acción al server, en este caso la posición...
@@ -178,32 +248,67 @@ const Game = () => {
     }
   };
 
-  const { players } = game;
+  /**
+   * Función que se ejecuta cuando se ha terminado el contador del
+   * turno del usaurio...
+   */
+  const handleInterval = () => {
+    if (hasTurn && currentPlayer && !isGameOver) {
+      /**
+       * Se obtiene la celda aleatoria...
+       */
+      const newCellPosition = getRandomCell({
+        currentPlayer,
+        clientCells,
+      });
+
+      /**
+       * Se valida que la celda esté dentro del rango...
+       */
+      if (cellPositionInRage(newCellPosition)) {
+        handleClickCell(newCellPosition);
+      }
+    }
+  };
+
+  if (!game) {
+    // Rune only shows your game after an onChange() so no need for loading screen
+    return;
+  }
 
   /**
-   * Establece el color que se muestra, dependiendo del turno...
+   * Se ontiene el color del board dependiendo del turno...
    */
-  // const currentColor = showCounter
-  //   ? "INITIAL"
-  //   : getCurrentColor(turnID, players);
-
-  // TODO: Se debe validar el showCounter
-  const currentColor = getCurrentColor(turnID, players);
-
-  // console.log(yourPlayerId);
-  // console.log("LA DATA A RENDERIZAR");
-  // console.log(clientCells);
+  const currentColor = showCounter
+    ? "INITIAL"
+    : getCurrentColor(turnID, players);
 
   return (
     <GameWrapper disableUI={isDisableUI} currentColor={currentColor}>
+      {showCounter && (
+        <StartCounter handleEndStartCounter={handleEndStartCounter} />
+      )}
+      <Score
+        players={players}
+        yourPlayerId={yourPlayerId || ""}
+        turnID={turnID}
+        hasTurn={hasTurn}
+        startTimer={startTimer && !isGameOver}
+        currentColor={currentColor}
+        handleInterval={handleInterval}
+      />
+      {showOpponentThinks && (
+        <OpponentThinks currentColor={currentColor as TBoardColor} />
+      )}
       <Grid>
         <Cells
           cells={clientCells}
           disableUI={isDisableUI}
-          player={getPlayerByID(yourPlayerId, players)}
+          player={currentPlayer}
           onClick={handleClickCell}
         />
       </Grid>
+      {showMessage && <ShowTurn currentColor={currentColor as TBoardColor} />}
     </GameWrapper>
   );
 };

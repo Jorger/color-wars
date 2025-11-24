@@ -1,4 +1,4 @@
-import { PlayerId, RuneClient } from "rune-sdk";
+import { PlayerId, RuneClient, Player as PlayerRune } from "rune-sdk";
 import { EBoardColor, ECirclePosition } from "../utils/constants";
 
 declare global {
@@ -29,6 +29,8 @@ export type TOpositeCirclePosition = Record<
   TCirclePositionWithoutCenter
 >;
 
+export type TOpositeBoardColor = Record<TBoardColor, TBoardColor>;
+
 export type CirclePosition = Record<TCirclePosition, ICoordiante>;
 
 export interface ICircleOutsite {
@@ -42,9 +44,7 @@ export interface INeighboringPath {
 }
 
 export interface ICell extends ICellServer {
-  // isDisabled: boolean;
   isAnimate: boolean;
-  colorCircleBase?: TBoardColor;
   circleOutsite: ICircleOutsite[];
 }
 
@@ -85,8 +85,6 @@ export interface Player {
   color: TBoardColor;
   score: number;
   hasInitialLaunch: boolean;
-  // TODO: creo que no se necesita
-  colorDistribution: TBoardColor[];
 }
 
 export interface GameState {
@@ -100,15 +98,12 @@ export interface GameState {
 
 export type GameActions = {
   onSelectCell: (cellPosition: IMatrix) => void;
+  onNextTurn: (cells: ICellServer[][]) => void;
 };
 
-// export type CirclePositionIndex = Record<number, TCirclePosition>;
+export type TTotalDotsByColor = Record<TBoardColor, number>;
 
-// export interface ICircleAnimation {
-//   colorCircleBase?: TBoardColor;
-//   animateBase?: boolean;
-//   destinityPosition?: TCirclePosition;
-//   colorCircleBaseOutside?: TBoardColor;
-//   animateOusite?: boolean;
-//   pathCircleOutside?: TPath;
-// }
+export interface PlayerScore extends PlayerRune {
+  score: number;
+  color: TBoardColor;
+}

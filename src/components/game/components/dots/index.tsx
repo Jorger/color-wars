@@ -7,6 +7,11 @@ interface DotsProps {
   total: number;
 }
 
+/**
+ * Renderiza el listao de dots que tiene cada celda...
+ * @param param0
+ * @returns
+ */
 const Dots = ({ total = 1 }: DotsProps) => (
   <React.Fragment>
     {new Array(MAX_DOTS).fill(null).map((_, index) => (

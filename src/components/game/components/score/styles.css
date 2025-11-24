@@ -1,0 +1,95 @@
+.game-score {
+  --progess-color: transparent;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 10px;
+  width: 100%;
+}
+
+.game-score-container {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  color: black;
+  overflow: hidden;
+  padding: 4px;
+  width: 170px;
+}
+
+.game-score-progress {
+  background-color: #dbe9f4;
+  background-image: linear-gradient(var(--progess-color), var(--progess-color));
+  background-position: var(--timer-position, 0);
+  background-repeat: no-repeat;
+  background-size: var(--timer-progress, 0);
+  border-radius: 15px;
+  padding: 4px 5px;
+}
+
+.game-score-progress.red {
+  --progess-color: #ff6c5f;
+}
+
+.game-score-progress.blue {
+  --progess-color: #03c9f1;
+}
+
+.game-score-progress-item {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.802);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.game-score-profile {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game-score-profile img {
+  background-color: white;
+  border-radius: 50%;
+  border: 3px solid white;
+  height: 30px;
+  transition: all 0.5s linear;
+  width: 30px;
+}
+
+.game-score-profile.red img {
+  border: 3px solid #b65048;
+  background-color: #b65048;
+}
+
+.game-score-profile.blue img {
+  border: 3px solid #3183a5;
+  background-color: #3183a5;
+}
+
+.game-score-value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.game-score-value.red {
+  color: #e77369;
+}
+
+.game-score-value.blue {
+  color: #1aa5e2;
+}
+
+.game-score-dot {
+  background-color: #4d5459;
+  border-radius: 50%;
+  height: 6px;
+  width: 6px;
+}
