@@ -143,3 +143,210 @@ Fin de pruebas
             console.log(cellPosition);
           }}
         /> */}
+
+
+Prueba de estado
+
+const TMP_CELLS: ICellServer[][] = [
+  [
+    {
+      cellPosition: {
+        row: 0,
+        col: 0,
+      },
+      cellColor: "RED",
+      totalDots: 2,
+    },
+    {
+      cellPosition: {
+        row: 0,
+        col: 1,
+      },
+      totalDots: 0,
+    },
+    {
+      cellPosition: {
+        row: 0,
+        col: 2,
+      },
+      cellColor: "RED",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 0,
+        col: 3,
+      },
+      cellColor: "RED",
+      totalDots: 1,
+    },
+    {
+      cellPosition: {
+        row: 0,
+        col: 4,
+      },
+      totalDots: 0,
+    },
+  ],
+  [
+    {
+      cellPosition: {
+        row: 1,
+        col: 0,
+      },
+      cellColor: "RED",
+      totalDots: 2,
+    },
+    {
+      cellPosition: {
+        row: 1,
+        col: 1,
+      },
+      cellColor: "RED",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 1,
+        col: 2,
+      },
+      cellColor: "RED",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 1,
+        col: 3,
+      },
+      cellColor: "RED",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 1,
+        col: 4,
+      },
+      totalDots: 0,
+    },
+  ],
+  [
+    {
+      cellPosition: {
+        row: 2,
+        col: 0,
+      },
+      cellColor: "RED",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 2,
+        col: 1,
+      },
+      cellColor: "RED",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 2,
+        col: 2,
+      },
+      cellColor: "RED",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 2,
+        col: 3,
+      },
+      cellColor: "BLUE",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 2,
+        col: 4,
+      },
+      totalDots: 0,
+    },
+  ],
+  [
+    {
+      cellPosition: {
+        row: 3,
+        col: 0,
+      },
+      cellColor: "BLUE",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 3,
+        col: 1,
+      },
+      cellColor: "BLUE",
+      totalDots: 2,
+    },
+    {
+      cellPosition: {
+        row: 3,
+        col: 2,
+      },
+      cellColor: "BLUE",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 3,
+        col: 3,
+      },
+      totalDots: 0,
+    },
+    {
+      cellPosition: {
+        row: 3,
+        col: 4,
+      },
+      totalDots: 0,
+    },
+  ],
+  [
+    {
+      cellPosition: {
+        row: 4,
+        col: 0,
+      },
+      cellColor: "BLUE",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 4,
+        col: 1,
+      },
+      totalDots: 0,
+    },
+    {
+      cellPosition: {
+        row: 4,
+        col: 2,
+      },
+      cellColor: "BLUE",
+      totalDots: 3,
+    },
+    {
+      cellPosition: {
+        row: 4,
+        col: 3,
+      },
+      totalDots: 0,
+    },
+    {
+      cellPosition: {
+        row: 4,
+        col: 4,
+      },
+      totalDots: 0,
+    },
+  ],
+];

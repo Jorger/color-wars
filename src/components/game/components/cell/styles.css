@@ -1,16 +1,18 @@
 .game-cell {
   -webkit-tap-highlight-color: transparent;
-  /* TODO: color debe ser dinnamico */
   background-color: #edf1df;
   border-radius: 10px;
   border: none;
-  cursor: pointer;
   height: var(--size-cell);
   position: relative;
   width: var(--size-cell);
   overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
   transition: background-color 100ms ease;
+}
+
+.game-cell:not(:disabled) {
+  cursor: pointer;
 }
 
 .game-cell.blue {

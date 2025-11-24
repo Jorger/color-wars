@@ -5,5 +5,21 @@ import Dot from "./dot";
 import Dots from "./dots";
 import GameWrapper from "./gameWrapper";
 import Grid from "./grid";
+import OpponentThinks from "./opponentThinks";
+import Score from "./score";
+import ShowTurn from "./showTurn";
+import StartCounter from "./startCounter";
 
-export { Cell, Cells, Circle, Dot, Dots, GameWrapper, Grid };
+export {
+  Cell,
+  Cells,
+  Circle,
+  Dot,
+  Dots,
+  GameWrapper,
+  Grid,
+  OpponentThinks,
+  Score,
+  ShowTurn,
+  StartCounter,
+};

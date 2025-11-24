@@ -1,7 +1,15 @@
 import { EBoardColor, TOTAL_CELLS } from "./utils/constants";
-import { randomNumber } from "./utils/randomNumber";
-import type { GameState, ICellServer, Player, TBoardColor } from "./interfaces";
 import { PlayerId } from "rune-sdk";
+import { randomNumber } from "./utils/randomNumber";
+import type {
+  GameState,
+  ICellServer,
+  IMatrix,
+  Player,
+  TTotalDotsByColor,
+} from "./interfaces";
+
+const INITIAL_CELL_POSITION: IMatrix = { row: -1, col: -1 };
 
 /**
  * Devuelve la información del jugador que ha hecho alguna acción...
@@ -10,7 +18,7 @@ import { PlayerId } from "rune-sdk";
  * @param allPlayerIds
  * @returns
  */
-export const getCurretPlayer = (players: Player[], playerId: PlayerId) => {
+const getCurretPlayer = (players: Player[], playerId: PlayerId) => {
   const currentIndex = players.findIndex((v) => v.playerID === playerId);
 
   if (currentIndex < 0) {
@@ -21,15 +29,27 @@ export const getCurretPlayer = (players: Player[], playerId: PlayerId) => {
 };
 
 /**
- * Retorna la distribución de colores dependieno del color del jugador...
- * @param color
+ * Calcular la totalidad de celdas por color...
+ * @param cells
  * @returns
  */
-const getColorDistribution = (color: TBoardColor): TBoardColor[] => {
-  if (color === EBoardColor.RED) {
-    return [EBoardColor.RED, EBoardColor.BLUE];
+const getTotalCellsColor = (cells: ICellServer[][]) => {
+  const totalColors: TTotalDotsByColor = {
+    [EBoardColor.BLUE]: 0,
+    [EBoardColor.RED]: 0,
+  };
+
+  for (let row = 0; row < TOTAL_CELLS; row++) {
+    for (let col = 0; col < TOTAL_CELLS; col++) {
+      const { cellColor } = cells[row][col];
+
+      if (cellColor) {
+        totalColors[cellColor] = totalColors[cellColor] + 1;
+      }
+    }
   }
-  return [EBoardColor.BLUE, EBoardColor.RED];
+
+  return totalColors;
 };
 
 /**
@@ -80,15 +100,12 @@ const getPlayerData = (allPlayerIds: string[]): GameState => {
       playerID: allPlayerIds[0],
       color: colorPlayer1,
       score: 0,
-      // TODO: revisar por que creo que no se está usando...
-      colorDistribution: getColorDistribution(colorPlayer1),
       hasInitialLaunch: false,
     },
     {
       playerID: allPlayerIds[1],
       color: colorPlayer2,
       score: 0,
-      colorDistribution: getColorDistribution(colorPlayer2),
       hasInitialLaunch: false,
     }
   );
@@ -97,6 +114,7 @@ const getPlayerData = (allPlayerIds: string[]): GameState => {
    * Se obtiene aleatoriamente el jugador que inicia la partida...
    */
   const turnNumber = randomNumber(0, 1);
+
   /**
    * Y se guarda el id del usuario que inicia la partida, ya que con este
    * es el que se identifica el jugador no el número obtenido...
@@ -109,7 +127,7 @@ const getPlayerData = (allPlayerIds: string[]): GameState => {
     turnID,
     isGameOver: false,
     cells: generateInitialCellData(),
-    cellPosition: { row: -1, col: -1 },
+    cellPosition: INITIAL_CELL_POSITION,
   };
 };
 
@@ -119,22 +137,104 @@ Rune.initLogic({
   setup: (allPlayerIds) => getPlayerData(allPlayerIds),
   actions: {
     onSelectCell: (cellPosition, { game }) => {
-      // game.hammerClick = hammerClick;
-      // console.log({ cellPosition, game });
       game.cellPosition = cellPosition;
+    },
+    onNextTurn: (cells, { game, playerId }) => {
+      /**
+       * Se obtiene el índice del jugador que hizo la acción...
+       */
+      const currentIndex = getCurretPlayer(game.players, playerId);
 
       /**
-       * Hacerlo en otro evento...
+       * El indice del player contrario...
        */
-      // playerId
-      // const currentIndex = getCurretPlayer(game.players, playerId);
+      const oposieIndexPlayer = currentIndex === 0 ? 1 : 0;
 
-      // /**
-      //  * Se indica que se ha hecho un lanzamiento...
-      //  */
-      // if (currentIndex >= 0 && !game.players[currentIndex].hasInitialLaunch) {
-      //   game.players[currentIndex].hasInitialLaunch = true;
-      // }
+      /**
+       * Saber si el usuario ya había realizado un lanzamiento inicial...
+       */
+      const { hasInitialLaunch, color } = game.players[currentIndex];
+
+      /**
+       * Para saber el color del player contrario...
+       */
+      const {
+        color: colorOpositePlayer,
+        hasInitialLaunch: hasInitialLaunchOpositePlayer,
+      } = game.players[oposieIndexPlayer];
+
+      /**
+       * Se valida si el usuario ya había realizado un lanzamiento...
+       */
+      if (!hasInitialLaunch) {
+        game.players[currentIndex].hasInitialLaunch = true;
+      }
+
+      /**
+       * Se actualzia la información de las celdas...
+       */
+      game.cells = cells;
+
+      /**
+       * Se reinicia la posición de la celda seleccioanda...
+       */
+      game.cellPosition = INITIAL_CELL_POSITION;
+
+      /**
+       * Traer el total de colores por celda que existe...
+       */
+      const totalCellsColor = getTotalCellsColor(game.cells);
+
+      /**
+       * Total de celda del player actual...
+       */
+      const totalCellsPlayer = totalCellsColor[color];
+
+      /**
+       * Ahora el color del jugador opuesto...
+       */
+      const totalCellsOpositePlayer = totalCellsColor[colorOpositePlayer];
+
+      /**
+       * Guardar el score para cada player
+       */
+      game.players[currentIndex].score = totalCellsPlayer;
+      game.players[oposieIndexPlayer].score = totalCellsOpositePlayer;
+
+      /**
+       * Validar si uno de los dos no tiene celdas vacías...
+       */
+      const isEmptyCell =
+        game.players[0].score === 0 || game.players[1].score === 0;
+
+      /**
+       * Si el jugador opuesto ya había lanzado, se debe validar el game over...
+       */
+      if (hasInitialLaunchOpositePlayer && isEmptyCell) {
+        /**
+         * Se indica que el juego ha terminado...
+         */
+        game.isGameOver = true;
+
+        /**
+         * Mostrar el ganador...
+         */
+        const indexWinner = game.players.findIndex((v) => v.score > 0);
+        const winner = game.playerIds[indexWinner];
+        const loser = game.playerIds[indexWinner === 0 ? 1 : 0];
+
+        Rune.gameOver({
+          players: {
+            [winner]: "WON",
+            [loser]: "LOST",
+          },
+        });
+      } else {
+        /**
+         * Se establece el siguiente turno, siempre y cuando no existe game over...
+         */
+        game.turnID = game.players[oposieIndexPlayer].playerID;
+      }
     },
   },
 });

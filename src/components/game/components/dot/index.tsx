@@ -16,11 +16,17 @@ interface DotProps {
 }
 
 const Dot = ({ position, isHide = false }: DotProps) => {
+  /**
+   * Posición base del dot...
+   */
   const style: React.CSSProperties = {
     left: position.x,
     top: position.y,
   };
 
+  /**
+   * Establece la clase css, que se usa en el dot
+   */
   const className = `${CLASS_NAMES.DOT} ${isHide ? CLASS_NAMES.HIDE : ""}`;
 
   return <div className={className} style={style} />;

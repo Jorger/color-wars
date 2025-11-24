@@ -20,14 +20,21 @@ const Cell = ({
   isDisabled = false,
   totalDots = 0,
   cellColor,
-  colorCircleBase,
   isAnimate = false,
   circleOutsite = [],
   onClick,
 }: CellProps) => {
-  // const { pathCircleOutside, colorCircleOutside } = circleOutsite || {};
+  /**
+   * Se valida si se tienen círculos que se animan desde afuera...
+   */
   const hasCircleOutsite = circleOutsite.length !== 0;
+
+  /**
+   * Valida si se hace una animación de círculos múltiples que salgan
+   * del centro de la celda...
+   */
   const animateMultipleCircles = isAnimate && !hasCircleOutsite;
+
   /**
    * Sólo se activa el color de la celda si existe y además no está bloqueado el botón
    */
@@ -46,7 +53,7 @@ const Cell = ({
         se renderizarán varios círculos, dependiendo a donde se puedan mover
       */}
       {totalDots > 0 &&
-        colorCircleBase &&
+        cellColor &&
         getPropsBaseCircles({
           cellPosition,
           isAnimate: animateMultipleCircles,
@@ -56,7 +63,7 @@ const Cell = ({
               key={index}
               path={path}
               isAnimate={animateMultipleCircles}
-              color={colorCircleBase}
+              color={cellColor}
             />
           );
         })}

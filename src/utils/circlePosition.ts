@@ -33,6 +33,9 @@ const BOTTOM: ICoordiante = {
   y: BASE_VERTICAL,
 };
 
+/**
+ * Determina las posiciones del círculo dentro de la celda...
+ */
 const CIRCLE_POSITION: CirclePosition = {
   [ECirclePosition.CENTER]: CENTER,
   [ECirclePosition.TOP]: TOP,
