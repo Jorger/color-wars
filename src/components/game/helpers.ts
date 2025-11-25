@@ -1,9 +1,11 @@
 import { cellPositionInRage } from "../../utils/indexInRange";
 import { PlayerId } from "rune-sdk";
+import { playSound } from "../../sounds";
 import { randomNumber } from "../../utils/randomNumber";
 import {
   CIRCLE_POSITION_INDEX,
   ECirclePosition,
+  ESounds,
   INCREASE_DOTS,
   INITIAL_TOTAL_DOTS,
   MAX_DOTS,
@@ -201,8 +203,16 @@ export const validateSelectCell = ({
    * que indica si ya había hecho lanzamientos...
    */
   const { color, hasInitialLaunch } = currentPlayerTurn;
+
+  /**
+   * Para el sonido de la selección de la celda...
+   */
+  playSound(hasInitialLaunch ? ESounds.SELECT_CELL : ESounds.FIRST_CELL);
+
+  /**
+   * Obtiene la celda que se ha seleccioando...
+   */
   const cell = copyClientCells[cellPosition.row][cellPosition.col];
-  // const { totalDots } = cell;
 
   /**
    * Se valida el número de dots que se establecen en la celda
@@ -404,6 +414,11 @@ export const validateCircleEndAnimation = ({
   clientCells,
   setUiInteractions,
 }: ValidateCircleEndAnimation) => {
+  /**
+   * Para el sonido de la división de la celda...
+   */
+  playSound(ESounds.SPLIT_CELL);
+
   /**
    * Se hace una copia de las celdas, para así poderla mutar...
    */
