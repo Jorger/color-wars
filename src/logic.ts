@@ -100,12 +100,14 @@ const getPlayerData = (allPlayerIds: string[]): GameState => {
       playerID: allPlayerIds[0],
       color: colorPlayer1,
       score: 0,
+      selectCell: false,
       hasInitialLaunch: false,
     },
     {
       playerID: allPlayerIds[1],
       color: colorPlayer2,
       score: 0,
+      selectCell: false,
       hasInitialLaunch: false,
     }
   );
@@ -136,14 +138,22 @@ Rune.initLogic({
   maxPlayers: 2,
   setup: (allPlayerIds) => getPlayerData(allPlayerIds),
   actions: {
-    onSelectCell: (cellPosition, { game }) => {
+    onSelectCell: (cellPosition, { game, playerId }) => {
       game.cellPosition = cellPosition;
+
+      const currentIndex = getCurretPlayer(game.players, playerId);
+
+      game.players[currentIndex].selectCell = true;
     },
     onNextTurn: (cells, { game, playerId }) => {
       /**
        * Se obtiene el índice del jugador que hizo la acción...
        */
       const currentIndex = getCurretPlayer(game.players, playerId);
+
+      if (!game.players[currentIndex].selectCell) return;
+
+      game.players[currentIndex].selectCell = false;
 
       /**
        * El indice del player contrario...

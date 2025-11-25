@@ -38,6 +38,8 @@ import type {
 } from "../../interfaces";
 
 const Game = () => {
+  // const hasTurnRef = useRef(false);
+
   /**
    * Guarda el estado del juego que proviene del server...
    */
@@ -85,6 +87,17 @@ const Game = () => {
    */
   const currentPlayer = getPlayerByID(yourPlayerId || "", players);
 
+  // const opositePlayer: Player | undefined = players.find(
+  //   (v) => v.playerID !== yourPlayerId || ""
+  // );
+
+  // const opositePlayerColor = opositePlayer?.color || EBoardColor.RED;
+  // const opositeHasInitialLaunch = opositePlayer?.hasInitialLaunch ?? false;
+
+  // const opositeHasInitialLaunch =
+  //   yourPlayerIdOpostite?.hasInitialLaunch ?? false;
+  // const opositePlayer = getPlayerByID();
+
   /**
    * Extraer la información que se require de la interacción del UI
    */
@@ -104,12 +117,19 @@ const Game = () => {
   /**
    * Bloquea el UI, para prevenir cualquier acción por parte del usuario...
    */
-  const isDisableUI = disableUI || !hasTurn || isGameOver;
+  const isDisableUI =
+    disableUI ||
+    !hasTurn ||
+    isGameOver ||
+    runDotAnimation ||
+    runCircleAnimation;
 
   /**
    * Si se muestra el componente que indica que el oponenente está pensando...
    */
   const showOpponentThinks = !showCounter && !hasTurn && startTimer;
+
+  // const [tmpLabel, setTmpLabel] = useState("");
 
   /**
    * Efecto donde se configura Rune...
@@ -137,6 +157,10 @@ const Game = () => {
           setYourPlayerId(yourPlayerId);
         }
 
+        // const hasTurnEffect = yourPlayerId === game.turnID;
+
+        // hasTurnRef.current = hasTurnEffect;
+
         /**
          * Si es un nuevo juego, se reinician los estados del juego y de las interacciones
          */
@@ -161,6 +185,17 @@ const Game = () => {
         }
 
         if (action?.name === GAME_ACTION_NAME.OnNextTurn) {
+          // if (game.isGameOver) {
+          //   /**
+          //    * Se establece que no debe exitir ninguna interacción...
+          //    */
+          //   setUiInteractions(UI_INTERACTIONS_STARTED);
+
+          //   /**
+          //    * Para el sonido del game over...
+          //    */
+          //   playSound(ESounds.GAME_OVER);
+          // }
           if (!game.isGameOver) {
             /**
              * Se debe habilitar el UI para ese cliente, además de habilitar el tiempo
@@ -170,9 +205,11 @@ const Game = () => {
               ...UI_INTERACTIONS_STARTED,
               disableUI: false,
               startTimer: true,
+              comes: "NEXT TURN",
             });
 
             // TODO: Tal vez sincronizar el valor de cells con el que llega del server...
+            setClientCells(getBaseDataCells(game.cells));
           } else {
             /**
              * Se establece que no debe exitir ninguna interacción...
@@ -194,6 +231,8 @@ const Game = () => {
    * movimiento de los círculos...
    */
   const handleCircleEndAnimation = useCallback(() => {
+    // console.log("EN handleCircleEndAnimation");
+
     setClientCells((current) =>
       validateCircleEndAnimation({
         clientCells: current,
@@ -211,6 +250,7 @@ const Game = () => {
    * Función que se ejcuta cuado termina la animación de los dots/puntos...
    */
   const handleDotEndAnimation = useCallback(() => {
+    // console.log("EN handleDotEndAnimation");
     setClientCells((current) =>
       validateDotEndAnimation({
         clientCells: current,
@@ -226,14 +266,27 @@ const Game = () => {
    */
   useWait(runDotAnimation, DOT_TIME_ANIMATION, handleDotEndAnimation);
 
+  // useEffect(() => {
+  //   if (hasTurn && goNextTurn) {
+  //     setUiInteractions(UI_INTERACTIONS_STARTED);
+
+  //     console.log("EL EFECTO DEL TURNO", { hasTurn, goNextTurn });
+  //     Rune.actions.onNextTurn(getCellServer(clientCells));
+  //   }
+  // }, [hasTurn, goNextTurn, clientCells]);
+
   /**
    * Función que se ejcuta cuando el counter inicial ha terminado...
    */
   const handleEndStartCounter = useCallback(() => {
-    setUiInteractions({
-      ...UI_INTERACTIONS_STARTED,
-      disableUI: false,
-      startTimer: true,
+    setUiInteractions((current) => {
+      return {
+        ...current,
+        showCounter: false,
+        disableUI: false,
+        startTimer: true,
+        comes: "handleEndStartCounter",
+      };
     });
   }, []);
 
@@ -246,7 +299,16 @@ const Game = () => {
       /**
        * Se debe bloquear al UI para el usuario que ha hecho click...
        */
-      setUiInteractions(UI_INTERACTIONS_STARTED);
+      setUiInteractions((current) => {
+        return {
+          ...current,
+          disableUI: true,
+          startTimer: false,
+          runDotAnimation: false,
+          runCircleAnimation: false,
+          comes: "handleClickCell",
+        };
+      });
 
       /**
        * Se emite la acción al server, en este caso la posición...
@@ -268,6 +330,8 @@ const Game = () => {
         currentPlayer,
         clientCells,
       });
+
+      // console.log({ newCellPosition });
 
       /**
        * Se valida que la celda esté dentro del rango...
@@ -315,6 +379,24 @@ const Game = () => {
           onClick={handleClickCell}
         />
       </Grid>
+      <div
+        style={{
+          padding: 15,
+          position: "absolute",
+          background: "#000000d1",
+          width: "100%",
+          color: "white",
+          bottom: 0,
+          left: 0,
+          zIndex: 60,
+          pointerEvents: "none",
+          fontSize: 10,
+        }}
+      >
+        <div>PlayerID: {yourPlayerId}</div>
+        <div>{hasTurn ? "TIENE TURNO" : "NO TIENE TURNO"}</div>
+        <pre>{JSON.stringify(uiInteractions, null, 2)}</pre>
+      </div>
       {showMessage && <ShowTurn currentColor={currentColor as TBoardColor} />}
     </GameWrapper>
   );
