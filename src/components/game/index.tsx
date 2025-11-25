@@ -1,7 +1,4 @@
 import { cellPositionInRage } from "../../utils/indexInRange";
-import { PlayerId } from "rune-sdk";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useWait } from "../../hooks";
 import {
   Cells,
   GameWrapper,
@@ -14,6 +11,7 @@ import {
 import {
   CIRCLE_TIME_ANIMATION,
   DOT_TIME_ANIMATION,
+  ESounds,
   GAME_ACTION_NAME,
   INITIAL_UI_INTERACTIONS,
   UI_INTERACTIONS_STARTED,
@@ -27,6 +25,10 @@ import {
   validateDotEndAnimation,
   validateSelectCell,
 } from "./helpers";
+import { PlayerId } from "rune-sdk";
+import { playSound } from "../../sounds";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useWait } from "../../hooks";
 import type {
   GameState,
   ICell,
@@ -176,6 +178,11 @@ const Game = () => {
              * Se establece que no debe exitir ninguna interacción...
              */
             setUiInteractions(UI_INTERACTIONS_STARTED);
+
+            /**
+             * Para el sonido del game over...
+             */
+            playSound(ESounds.GAME_OVER);
           }
         }
       },

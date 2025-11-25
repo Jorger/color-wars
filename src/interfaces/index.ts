@@ -1,5 +1,5 @@
+import { EBoardColor, ECirclePosition, ESounds } from "../utils/constants";
 import { PlayerId, RuneClient, Player as PlayerRune } from "rune-sdk";
-import { EBoardColor, ECirclePosition } from "../utils/constants";
 
 declare global {
   const Rune: RuneClient<GameState, GameActions>;
@@ -9,6 +9,8 @@ export type TBoardColor = keyof typeof EBoardColor;
 export type IBackgroud = TBoardColor | "INITIAL";
 export type TCirclePosition = keyof typeof ECirclePosition;
 export type TCirclePositionWithoutCenter = Exclude<TCirclePosition, "CENTER">;
+export type TESounds = keyof typeof ESounds;
+export type Sounds = Record<TESounds, Howl>;
 
 export interface ICoordiante {
   x: number;

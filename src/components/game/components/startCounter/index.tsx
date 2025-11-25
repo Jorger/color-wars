@@ -1,13 +1,13 @@
 import "./styles.css";
+import { playSound } from "../../../../sounds";
 import { useInterval } from "../../../../hooks";
 import {
   BASE_CLASS_NAME_GAME,
+  ESounds,
   LABELS,
   TIME_COUNTDOWN,
 } from "../../../../utils/constants";
 import React, { useState } from "react";
-
-// // import { playSound } from "../../../../sounds";
 
 const BASE_CLASS_NAME = `${BASE_CLASS_NAME_GAME}-counter`;
 
@@ -32,7 +32,7 @@ const StartCounter = ({ handleEndStartCounter }: StartCounterProps) => {
       /**
        * Reproduce el sonido iniciald el counter
        */
-      // playSound(newValue < 0 ? ESounds.WHISTLE : ESounds.COUNTER);
+      playSound(newValue < 0 ? ESounds.WHISTLE : ESounds.COUNTER);
 
       if (newValue < 0) {
         handleEndStartCounter();
