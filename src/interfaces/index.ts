@@ -73,6 +73,13 @@ export interface IUInteractions {
    * Dtermina que se debe iniciar a esucuchar la animación de los círculos...
    */
   runCircleAnimation: boolean;
+  // hasTurn: boolean;
+
+  /**
+   * Opcional para ver donde queda...
+   */
+  // TODO: borrar
+  comes?: string;
 }
 
 export interface ICellServer {
@@ -87,6 +94,7 @@ export interface Player {
   color: TBoardColor;
   score: number;
   hasInitialLaunch: boolean;
+  selectCell: boolean;
 }
 
 export interface GameState {

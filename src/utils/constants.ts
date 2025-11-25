@@ -92,6 +92,8 @@ export const INITIAL_UI_INTERACTIONS: IUInteractions = {
   startTimer: false,
   runDotAnimation: false,
   runCircleAnimation: false,
+  // hasTurn: false,
+  comes: "INITIAL",
 };
 
 export const UI_INTERACTIONS_STARTED: IUInteractions = {
@@ -100,6 +102,8 @@ export const UI_INTERACTIONS_STARTED: IUInteractions = {
   startTimer: false,
   runDotAnimation: false,
   runCircleAnimation: false,
+  // hasTurn: false,
+  comes: "STARTED",
 };
 
 export const LABELS = {

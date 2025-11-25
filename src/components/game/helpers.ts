@@ -244,7 +244,16 @@ export const validateSelectCell = ({
   setUiInteractions({
     ...UI_INTERACTIONS_STARTED,
     runDotAnimation: true,
+    comes: "validateSelectCell",
   });
+  // setUiInteractions((current) => {
+  //   return {
+  //     ...current,
+  //     disableUI: false,
+  //     runDotAnimation: true,
+  //     comes: "validateSelectCell",
+  //   };
+  // });
 
   return copyClientCells;
 };
@@ -263,7 +272,7 @@ interface ValidateDotEndAnimation {
  */
 export const validateDotEndAnimation = ({
   clientCells,
-  hasTurn = false,
+  hasTurn,
   players,
   setUiInteractions,
 }: ValidateDotEndAnimation) => {
@@ -381,20 +390,42 @@ export const validateDotEndAnimation = ({
     completeCell = !(hasInitialLaunch && totalColorOposite === 0);
   }
 
-  /**
-   * Se indica que la animación del dot ha terminado...
-   */
-  setUiInteractions({
-    ...UI_INTERACTIONS_STARTED,
-    runDotAnimation: false,
-    runCircleAnimation: completeCell,
-  });
+  /*
+  //   // setUiInteractions({
+          //   //   ...UI_INTERACTIONS_STARTED,
+          //   //   disableUI: false,
+          //   //   startTimer: true,
+          //   //   comes: "NEXT TURN",
+          //   // });
+  */
+
+  // setUiInteractions((current) => {
+  //   return {
+  //     ...current,
+  //     runDotAnimation: false,
+  //     runCircleAnimation: completeCell,
+  //     comes: "validateDotEndAnimation",
+  //   };
+  // });
 
   /**
    * Si no se completa una celda, en este caso se tiene que emitir el siguiente turno...
    */
-  if (!completeCell && hasTurn) {
-    Rune.actions.onNextTurn(getCellServer(copyClientCells));
+  if (!completeCell) {
+    if (hasTurn) {
+      Rune.actions.onNextTurn(getCellServer(copyClientCells));
+    }
+  } else {
+    /**
+     * Se indica que la animación del dot ha terminado...
+     */
+    setUiInteractions({
+      ...UI_INTERACTIONS_STARTED,
+      disableUI: completeCell,
+      startTimer: !completeCell,
+      runCircleAnimation: completeCell,
+      comes: "validateDotEndAnimation",
+    });
   }
 
   return copyClientCells;
@@ -504,8 +535,19 @@ export const validateCircleEndAnimation = ({
    */
   setUiInteractions({
     ...UI_INTERACTIONS_STARTED,
+    disableUI: false,
     runDotAnimation: true,
+    comes: "validateCircleEndAnimation",
   });
+
+  // setUiInteractions((current) => {
+  //   return {
+  //     ...current,
+  //     runCircleAnimation: false,
+  //     runDotAnimation: true,
+  //     comes: "validateCircleEndAnimation",
+  //   };
+  // });
 
   return copyClientCells;
 };
