@@ -244,16 +244,7 @@ export const validateSelectCell = ({
   setUiInteractions({
     ...UI_INTERACTIONS_STARTED,
     runDotAnimation: true,
-    comes: "validateSelectCell",
   });
-  // setUiInteractions((current) => {
-  //   return {
-  //     ...current,
-  //     disableUI: false,
-  //     runDotAnimation: true,
-  //     comes: "validateSelectCell",
-  //   };
-  // });
 
   return copyClientCells;
 };
@@ -390,24 +381,6 @@ export const validateDotEndAnimation = ({
     completeCell = !(hasInitialLaunch && totalColorOposite === 0);
   }
 
-  /*
-  //   // setUiInteractions({
-          //   //   ...UI_INTERACTIONS_STARTED,
-          //   //   disableUI: false,
-          //   //   startTimer: true,
-          //   //   comes: "NEXT TURN",
-          //   // });
-  */
-
-  // setUiInteractions((current) => {
-  //   return {
-  //     ...current,
-  //     runDotAnimation: false,
-  //     runCircleAnimation: completeCell,
-  //     comes: "validateDotEndAnimation",
-  //   };
-  // });
-
   /**
    * Si no se completa una celda, en este caso se tiene que emitir el siguiente turno...
    */
@@ -424,7 +397,6 @@ export const validateDotEndAnimation = ({
       disableUI: completeCell,
       startTimer: !completeCell,
       runCircleAnimation: completeCell,
-      comes: "validateDotEndAnimation",
     });
   }
 
@@ -537,17 +509,7 @@ export const validateCircleEndAnimation = ({
     ...UI_INTERACTIONS_STARTED,
     disableUI: false,
     runDotAnimation: true,
-    comes: "validateCircleEndAnimation",
   });
-
-  // setUiInteractions((current) => {
-  //   return {
-  //     ...current,
-  //     runCircleAnimation: false,
-  //     runDotAnimation: true,
-  //     comes: "validateCircleEndAnimation",
-  //   };
-  // });
 
   return copyClientCells;
 };

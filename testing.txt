@@ -350,3 +350,23 @@ const TMP_CELLS: ICellServer[][] = [
     },
   ],
 ];
+
+
+<div
+        style={{
+          padding: 15,
+          position: "absolute",
+          background: "#000000d1",
+          width: "100%",
+          color: "white",
+          bottom: 0,
+          left: 0,
+          zIndex: 60,
+          pointerEvents: "none",
+          fontSize: 10,
+        }}
+      >
+        <div>PlayerID: {yourPlayerId}</div>
+        <div>{hasTurn ? "TIENE TURNO" : "NO TIENE TURNO"}</div>
+        <pre>{JSON.stringify(uiInteractions, null, 2)}</pre>
+      </div>
