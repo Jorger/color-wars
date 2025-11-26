@@ -10,7 +10,7 @@ Color Wars is a fast-paced, real-time strategy game where players compete to tak
 * Each player starts with a set of colored circles on the board.
 * Click on your circles to increase their dot count by one.
 * When a circle reaches 4 dots, it explodes, capturing the four adjacent squares and spreading your color.
-* Chain reactions can happen—use them to your advantage to dominate large areas quickly.
+* Chain reactions can happen, use them to your advantage to dominate large areas quickly.
 * The goal is simple: Fill the entire board with your color before your opponent does.
 
 ## 📦 Tech Stack
