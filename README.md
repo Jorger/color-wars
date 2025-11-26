@@ -1,4 +1,4 @@
-🎨 Color Wars
+# 🎨 Color Wars
 
 ![Poster](https://raw.githubusercontent.com/Jorger/color-wars/refs/heads/main/poster_color_wars.png)
 
