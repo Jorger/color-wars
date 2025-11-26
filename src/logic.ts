@@ -139,10 +139,15 @@ Rune.initLogic({
   setup: (allPlayerIds) => getPlayerData(allPlayerIds),
   actions: {
     onSelectCell: (cellPosition, { game, playerId }) => {
-      game.cellPosition = cellPosition;
-
       const currentIndex = getCurretPlayer(game.players, playerId);
 
+      if (game.players[currentIndex].selectCell) return;
+
+      game.cellPosition = cellPosition;
+
+      /**
+       * Para validar que el jugador ya ha seleccionado una celda...
+       */
       game.players[currentIndex].selectCell = true;
     },
     onNextTurn: (cells, { game, playerId }) => {
@@ -151,8 +156,14 @@ Rune.initLogic({
        */
       const currentIndex = getCurretPlayer(game.players, playerId);
 
+      /**
+       * Previene que se cambie de turno si el jugador no ha hecho un lanzamiento...
+       */
       if (!game.players[currentIndex].selectCell) return;
 
+      /**
+       * Indica que no ha lanzando, para así validar su selección de nuevo...
+       */
       game.players[currentIndex].selectCell = false;
 
       /**
